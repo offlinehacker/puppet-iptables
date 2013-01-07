@@ -11,15 +11,21 @@ define iptables::table($table = $name, $config) {
     } 
 }
 
-define iptables::chain($chain = $name, $table, $policy, $config = getparam($table, "config")) {
+define iptables::chain($chain = $name, $table, $policy = undef, $config = getparam($table, "config")) {
     $path = getparam($config, "path")
     $table_name = getparam($table, "table")
+
+    if $policy {
+        $changes =  ["set chain[ . = '$chain'] $chain",
+                     "set chain[ . = '$chain']/policy $policy"]
+    } else {
+        $changes =  ["set chain[ . = '$chain'] $chain"]
+    }
 
     # Add chain
     augeas { "iptables.chain.$table.$chain.add":
         context => "/files$path/table[ . = '$table_name']",
-        changes => ["set chain[ . = '$chain'] $chain",
-                    "set chain[ . = '$chain']/policy $policy"],
+        changes => $changes,
         lens => 'Iptables.lns',
         incl => $path
     }
