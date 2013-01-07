@@ -1,21 +1,25 @@
 # Puppet iptables/ip6tables module using augeas for rule managment
 
-This is non-destructive iptables/ip6tables puppet module using augeas.
+Cross platform puppet iptables/ip6tables module using augeas for 
+rule managment
 
-This means that it will preserve all current or later included
-rules until they don't break the iptables functionality you
-describe from puppet. 
+What does this mean?
+
+* Is easy and straightforward
+* And advanced at the same time
+* it will preserve all current or later included rules until they 
+  don't break the iptables functionality you describe from puppet.
 
 This module should cover all use cases and, because it's directly
 using augeas it let's user write rules in augeas format and at the
 same time keep it simple. Also rule order can simply be preserved.
 
-## types
+## Types
 
 This module provides several types to make configuring iptables 
 easier.
 
-They are splitted in two layer of abstractions:
+They are splitted in two layers of abstractions:
 
 * Base iptables types
 * Helper iptables types
@@ -23,15 +27,15 @@ They are splitted in two layer of abstractions:
 ### Base iptables types
 
 Base types are basic types that manage iptables/ip6tables on
-the same way. *It is advised not to use them, but usage of helper
-types is preffered*.
+the same way. **It is advised not to use them, but usage of helper
+types is preffered**.
 
 If you must use them, because helper types does not fit your needs,
 first create config with specified location of your ip table:
 
-   iptables::config {"my_iptables_config":
-       path => /path/to/my/iptables
-   }
+    iptables::config {"my_iptables_config":
+        path => /path/to/my/iptables
+    }
 
 Now you can define several tables you wish to use:
 
@@ -174,9 +178,10 @@ following:
         ],
     }
 
-Pretty straightforward huh? Well there are also other helper
-types defined, especially i didn't mention ipv6 helper equialents,
-but you can look them up in helpers.pp file.
+Pretty straightforward huh? 
+
+Well there are also other helper types defined, especially i didn't 
+mention ipv6 helper equialents, but you can look them up in helpers.pp file.
 
 ## Example
 
