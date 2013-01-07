@@ -1,0 +1,10 @@
+name    'puppet-iptables'
+version '0.5.0'
+source  'https://github.com/offlinehacker/puppet-iptables.git'
+author  'offline'
+license 'Apache 2.0'
+summary 'Cross platform puppet iptables/ip6tables module using augeas for rule managment'
+description 'Cross platform puppet iptables/ip6tables module using augeas for rule managment'
+project_page 'https://github.com/offlinehacker/puppet-iptables'
+
+dependency 'offline/stdlib', '>= 3.2.0'
