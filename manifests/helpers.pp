@@ -41,7 +41,7 @@ class iptables::globals($iptables_path = "/etc/iptables-save",
 }
 
 # Helpers for defining iptables chains
-define iptables::chain::filter($policy = 'undef') {
+define iptables::chain::filter($policy = "-") {
     iptables::chain { "iptables.chain.filter.$name":
         table => Iptables::Table["iptables.globals.table.filter"],
         policy => $policy,
@@ -49,7 +49,7 @@ define iptables::chain::filter($policy = 'undef') {
     }
 }
 
-define iptables::chain::nat($policy = 'undef') {
+define iptables::chain::nat($policy = "-") {
     iptables::chain { "iptables.chain.nat.$name":
         table => Iptables::Table["iptables.globals.table.nat"],
         policy => $policy,
@@ -57,7 +57,7 @@ define iptables::chain::nat($policy = 'undef') {
     }
 }
 
-define iptables::chain::mangle($policy = 'undef') {
+define iptables::chain::mangle($policy = "-") {
     iptables::chain { "iptables.chain.mangle.$name":
         table => Iptables::Table["iptables.globals.table.mangle"],
         policy => $policy,
@@ -65,7 +65,7 @@ define iptables::chain::mangle($policy = 'undef') {
     }
 }
 
-define ip6tables::chain::filter($policy = undef) {
+define ip6tables::chain::filter($policy = "-") {
     iptables::chain { "ip6tables.chain.filter.$name":
         table => Iptables::Table["ip6tables.globals.table.filter"],
         policy => $policy,
@@ -73,7 +73,35 @@ define ip6tables::chain::filter($policy = undef) {
     }
 }
 
-define ip6tables::chain::mangle($policy = undef) {
+define ip6tables::chain::mangle($policy = "-") {
+    iptables::chain { "ip6tables.chain.mangle.$name":
+        table => Iptables::Table["ip6tables.globals.table.mangle"],
+        policy => $policy,
+        chain => $name
+    }
+}
+
+define ipi46tables::chain::filter($policy = "-") {
+    iptables::chain { "iptables.chain.filter.$name":
+        table => Iptables::Table["iptables.globals.table.filter"],
+        policy => $policy,
+        chain => $name
+    }
+
+    iptables::chain { "ip6tables.chain.filter.$name":
+        table => Iptables::Table["ip6tables.globals.table.filter"],
+        policy => $policy,
+        chain => $name
+    }
+}
+
+define ip46tables::chain::mangle($policy = "-") {
+    iptables::chain { "iptables.chain.mangle.$name":
+        table => Iptables::Table["iptables.globals.table.mangle"],
+        policy => $policy,
+        chain => $name
+    }
+
     iptables::chain { "ip6tables.chain.mangle.$name":
         table => Iptables::Table["ip6tables.globals.table.mangle"],
         policy => $policy,
@@ -84,7 +112,8 @@ define ip6tables::chain::mangle($policy = undef) {
 
 # Helpers for defining iptables rules
 define iptables::filter($chain, $changes, $remove_duplicates = true) {
-    iptables::rule { "$name":
+    iptables::rule { "iptables.filter.$name":
+        rule => $name,
         table => Iptables::Table["iptables.globals.table.filter"],
         chain => $chain,
         changes => $changes,
@@ -94,22 +123,24 @@ define iptables::filter($chain, $changes, $remove_duplicates = true) {
 }
 
 define iptables::nat($chain, $changes, $remove_duplicates = true) {
-    iptables::rule { "$name":
+    iptables::rule { "iptables.nat.$name":
+        rule => $name,
         table => Iptables::Table["iptables.globals.table.nat"],
         chain => $chain,
         changes => $changes,
         remove_duplicates => $remove_duplicates,
-        require => $require
+        require => $require,
     }
 }
 
 define iptables::mangle($chain, $changes, $remove_duplicates = true) {
-    iptables::rule { "$name":
+    iptables::rule { "iptables.mangle.$name":
+        rule => $name,
         table => Iptables::Table["iptables.globals.table.mangle"],
         chain => $chain,
         changes => $changes,
         remove_duplicates => $remove_duplicates,
-        require => $require
+        require => $require,
     }
 }
 
@@ -132,5 +163,41 @@ define ip6tables::mangle($chain, $changes, $remove_duplicates = true) {
         changes => $changes,
         remove_duplicates => $remove_duplicates,
         require => $require
+    }
+}
+
+define ip46tables::filter($chain, $changes, $remove_duplicates = true) {
+    iptables::rule { "iptables.filter.$name":
+        rule => $name,
+        table => Iptables::Table["iptables.globals.table.filter"],
+        chain => $chain,
+        changes => $changes,
+        remove_duplicates => $remove_duplicates,
+    }
+
+    iptables::rule { "ip6tables.filter.$name":
+        rule => $name,
+        table => Iptables::Table["ip6tables.globals.table.filter"],
+        chain => $chain,
+        changes => $changes,
+        remove_duplicates => $remove_duplicates,
+    }
+}
+
+define ip46tables::mangle($chain, $changes, $remove_duplicates = true) {
+    iptables::rule { "iptables.mangle.$name":
+        rule => $name,
+        table => Iptables::Table["iptables.globals.table.mangle"],
+        chain => $chain,
+        changes => $changes,
+        remove_duplicates => $remove_duplicates,
+    }
+
+    iptables::rule { "ip6tables.mangle.$name":
+        rule => $name,
+        table => Iptables::Table["ip6tables.globals.table.mangle"],
+        chain => $chain,
+        changes => $changes,
+        remove_duplicates => $remove_duplicates,
     }
 }
